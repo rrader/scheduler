@@ -30,6 +30,13 @@ class UI():
         self.canvas.itemconfig(text, text="drawing")
         self.state = DRAW
 
+    def keypressed(self, event):
+        print(123)
+        if event.char == '1':
+            self.draw_command()
+        if event.char == '2':
+            self.connect_command()
+
     def build(self):
         top = Frame(self.root)
         bottom = Frame(self.root)
@@ -43,6 +50,7 @@ class UI():
 
         self.canvas = Canvas(self.root, width=800, height=600, bg='white')
         self.canvas.bind("<Double-Button-1>", self.add_node)
+        self.canvas.bind_all('<Key>', self.keypressed)
         self.canvas.pack(in_=bottom, expand=YES, fill=BOTH)
         self.canvas.create_text(50, 10, text="drawing", tags="action")
 
