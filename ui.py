@@ -1,3 +1,5 @@
+import json
+from pprint import pprint
 from tkinter import *
 from tkinter import simpledialog
 from graph import new_node
@@ -31,11 +33,34 @@ class UI():
         self.state = DRAW
 
     def keypressed(self, event):
-        print(123)
         if event.char == '1':
             self.draw_command()
         if event.char == '2':
             self.connect_command()
+
+    def save(self, event):
+        f = simpledialog.askstring("Save", "filename")
+        if not f:
+            return
+        getnum = lambda k: int(list(filter(None, re.findall("\d*", self.canvas.gettags(k)[0])))[0])
+        positions = {getnum(k): self.canvas.coords(k) for k in self.canvas.find_withtag("node_oval")}
+        with open(f, "w") as fl:
+            pprint([self.connections, self.nodes, positions], fl, indent=2)
+
+    def open(self, event):
+        f = simpledialog.askstring("Open", "filename")
+        if not f:
+            return
+        connections, nodes, coords = eval(open(f, "r").read())
+        self.connections, self.nodes = connections, {}
+        for k in nodes.keys():
+            x = (coords[k][0] + coords[k][2]) / 2
+            y = (coords[k][1] + coords[k][3]) / 2
+            i = self.draw_circle(x, y, 20)
+            self.nodes[i] = new_node()
+            self.nodes[i]['weight'] = nodes[k]['weight']
+        for k in connections.keys():
+            self.draw_line(k[0], k[1])
 
     def build(self):
         top = Frame(self.root)
@@ -51,6 +76,8 @@ class UI():
         self.canvas = Canvas(self.root, width=800, height=600, bg='white')
         self.canvas.bind("<Double-Button-1>", self.add_node)
         self.canvas.bind_all('<Key>', self.keypressed)
+        self.canvas.bind_all("<Control-s>",self.save)
+        self.canvas.bind_all("<Control-o>",self.open)
         self.canvas.pack(in_=bottom, expand=YES, fill=BOTH)
         self.canvas.create_text(50, 10, text="drawing", tags="action")
 
@@ -142,7 +169,7 @@ class UI():
     def draw_circle(self, x, y, rad):
         self.id += 1
         tag = "item{}".format(self.id)
-        oval = self.canvas.create_oval(x-rad, y-rad, x+rad, y+rad, width=2, fill='white', tags=(tag, tag+"o", "node"))
+        oval = self.canvas.create_oval(x-rad, y-rad, x+rad, y+rad, width=2, fill='white', tags=(tag, tag+"o", "node", "node_oval"))
         name = self.canvas.create_text(x, y-rad/2, text=str(self.id), tags=(tag, tag+"n", "node"))
         line = self.canvas.create_line(x-rad, y, x+rad, y, width=2, fill='black', tags=(tag, tag+"l", "node"))
         weight = self.canvas.create_text(x, y+rad/2, text="", tags=(tag, tag+"w", "node"))
