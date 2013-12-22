@@ -1,8 +1,13 @@
 import json
+from multiprocessing import Process
 from pprint import pprint
+from threading import Thread
 from tkinter import *
 from tkinter import simpledialog
+from numpy import zeros
+from numpy.matrixlib import matrix
 from graph import new_node
+import scheduler
 
 CONNECT, DRAW = range(2)
 
@@ -47,10 +52,7 @@ class UI():
         with open(f, "w") as fl:
             pprint([self.connections, self.nodes, positions], fl, indent=2)
 
-    def open(self, event):
-        f = simpledialog.askstring("Open", "filename")
-        if not f:
-            return
+    def load_file(self, f):
         connections, nodes, coords = eval(open(f, "r").read())
         self.connections, self.nodes = connections, {}
         for k in nodes.keys():
@@ -61,6 +63,26 @@ class UI():
             self.nodes[i]['weight'] = nodes[k]['weight']
         for k in connections.keys():
             self.draw_line(k[0], k[1])
+        self.redraw()
+
+    def open(self, event):
+        f = simpledialog.askstring("Open", "filename")
+        if not f:
+            return
+        self.load_file(f)
+
+    def get_matrix(self):
+        m = zeros(shape=(len(self.nodes),)*2)
+        for s, e in self.connections.keys():
+            m[s-1, e-1] = self.connections[(s,e)]
+        n = zeros(shape=(len(self.nodes),))
+        for k in self.nodes.keys():
+            n[k-1] = self.nodes[k]['weight']
+        return m, n
+
+    def start_schedule(self):
+        matrix = self.get_matrix()
+        scheduler.schedule(*matrix, cpus=3)
 
     def build(self):
         top = Frame(self.root)
@@ -70,8 +92,10 @@ class UI():
 
         b = Button(self.root, text="Connect", width=4, height=1, command=self.connect_command)
         c = Button(self.root, text="Draw", width=4, height=1, command=self.draw_command)
+        d = Button(self.root, text="Schedule", width=4, height=1, command=self.start_schedule)
         b.pack(in_=top, side=LEFT)
         c.pack(in_=top, side=LEFT)
+        d.pack(in_=top, side=LEFT)
 
         self.canvas = Canvas(self.root, width=800, height=600, bg='white')
         self.canvas.bind("<Double-Button-1>", self.add_node)
@@ -83,6 +107,8 @@ class UI():
 
     def show(self):
         self.build()
+        self.load_file('test4')
+        Process(target=self.start_schedule).start()
         self.root.mainloop()
 
     def add_node(self, event):
