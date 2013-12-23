@@ -107,7 +107,7 @@ class UI():
 
     def show(self):
         self.build()
-        self.load_file('test4')
+        self.load_file('test6')
         Process(target=self.start_schedule).start()
         self.root.mainloop()
 
