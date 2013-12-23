@@ -62,28 +62,32 @@ def pop_priorities(lst, priorities):
     return lst.pop()
 
 def schedule(conn, tasks, cpus):
+    print(conn, "<< connections")
+    print(tasks, "<< tasks")
     tasks_list = tasks.copy()
     levels = split_levels(conn)
     cp = find_critical_path(conn, tasks)  # fixme: iterate and check all pathes
     print(cp, "<< critical path")
 
-    plan_task = [[i, None, None] for i, _ in enumerate(tasks)]  # (task, cpu, time)
+    plan_task = [[i, [], []] for i, _ in enumerate(tasks)]  # (task, cpu, time)
     plan_copy = [[] for i in range(cpus)]  # (task, cpu, time)
 
     def data_ready(task):
-        return plan_task[task][2] + tasks[task]
+        return plan_task[task][2][0] + tasks[task]
 
     def get_ready(time):
         """ List ready tasks (without data transfer)"""
-        ready = list(set([t[0] for t in plan_task if t[1] is not None and (time >= t[2] + tasks[t[0]])]))
+        ready = list(set([t[0] for t in plan_task if t[1] and (time >= t[2][0] + tasks[t[0]])]))
         return ready
 
     def get_ready_cpus(time):
         """ List free cpus """
         cpus_lst = list(range(1, cpus+1))
         for t in plan_task:
-            if t[1] is not None and (t[2] <= time < (t[2] + tasks[t[0]])):
-                cpus_lst.remove(t[1])
+            for i, _ in enumerate(t[1]):
+                if t[2][i] <= time < (t[2][i] + tasks[t[0]]):
+                    if t[1][i] in cpus_lst:
+                        cpus_lst.remove(t[1][i])
         return cpus_lst
 
     def get_dependencies(task):
@@ -98,16 +102,24 @@ def schedule(conn, tasks, cpus):
         return ready
 
     def is_planned(task):
-        return any(i[0] == task and i[1] is not None for i in plan_task)
+        return any(i[0] == task and i[1] for i in plan_task)
 
     def not_planned(tasks):
         return [int(t) for t in tasks if not is_planned(t)]
 
     def get_dependents(task):
         return [i for i, v in enumerate(conn[task]) if v > 0]
-    ## copy 1) to node in highest level, 2) time to execute is lowest
 
-    def do_plan_copy(time, weighs, cpu, fake=True):
+    def is_busy(time, cpu):
+        return any(any(tx <= time < tx + tasks[t[0]] for tx in t[2]) for t in plan_task if t[1] and cpu in t[1])
+
+    def get_execution_frame(from_time, w, cpu):
+        ts = int(from_time)
+        while not all(not is_busy(t, cpu) for t in range(ts, ts+int(w))):  # can be better
+            ts += 1
+        return ts
+
+    def do_plan_copy(time, weighs, cpu, fake=True, nodups=False):
         if fake:
             _plan_task = deepcopy(plan_task)
             _plan_copy = deepcopy(plan_copy)
@@ -117,16 +129,16 @@ def schedule(conn, tasks, cpus):
         time_added = [time]
         plans = []
         for d, w in weighs:
-            d_cpu = _plan_task[d][1]
+            d_cpu = _plan_task[d][1][0]
             if d_cpu == cpu: continue
-            time_start = _plan_task[d][2] + tasks[d]
+            time_start = _plan_task[d][2][0] + tasks[d]
             mc1 = nearest_copy_ability(time_start, cpu, w)
             mc2 = nearest_copy_ability(time_start, d_cpu, w)
             plan = max(mc1, mc2)
-            plans.append((d, w, time_start))
+            plans.append((d, w, plan, time_start))
 
-        for d, w, time_start in sorted(plans, key=lambda x:x[2]):
-            d_cpu = _plan_task[d][1]
+        for d, w, plan, time_start in sorted(plans, key=lambda x:x[3]):
+            d_cpu = _plan_task[d][1][0]
             mc1 = nearest_copy_ability(time_start, cpu, w)
             mc2 = nearest_copy_ability(time_start, d_cpu, w)
             plan = max(mc1, mc2)
@@ -135,19 +147,29 @@ def schedule(conn, tasks, cpus):
                 mc2 = nearest_copy_ability(plan, d_cpu, w)
                 plan = max(mc1, mc2)
 
-            # rerun
-            #do_plan_copy_predict(plan)
+            weights_sub = sorted([(d, conn[d, r]) for d in get_dependencies(d)],
+                             key=lambda x: x[1], reverse=True)
+            predicted_rerun = do_plan_copy_predict(time, weights_sub, cpu)
+            predicted_rerun = get_execution_frame(predicted_rerun, tasks[d], cpu)
             # compare
-            _plan_copy[cpu-1].append((plan, plan + w, d+1, r+1))
-            _plan_copy[d_cpu-1].append((plan, plan + w, d+1, r+1))
-            time_added.append(plan + w)
+            if True or (not nodups and predicted_rerun + tasks[d] >= plan + w):
+                _plan_copy[cpu-1].append((plan, plan + w, d+1, r+1))
+                _plan_copy[d_cpu-1].append((plan, plan + w, d+1, r+1))
+                time_added.append(plan + w)
+            else:
+                do_plan_copy(time, weights_sub, cpu)
+                _plan_task[d][1].append(cpu)
+                _plan_task[d][2].append(predicted_rerun)
+                time_added.append(predicted_rerun + tasks[d])
 
-        _plan_task[r][1] = cpu
-        _plan_task[r][2] = max(time_added)
+        _plan_task[r][1].append(cpu)
+        _plan_task[r][2].append(max(time_added))
+        if not weighs:
+            time_added = [0]
         return _plan_copy, _plan_task, max(time_added)
 
-    def do_plan_copy_predict(time, weight, cpu):
-        return do_plan_copy(time, weight, cpu, fake=True)[2]
+    def do_plan_copy_predict(time, weight, cpu, nodups=False):
+        return do_plan_copy(time, weight, cpu, fake=True, nodups=nodups)[2]
 
     def is_busy_with_copying(time, cpu):
         return any(p[0] <= time < p[1] for p in plan_copy[cpu-1])
@@ -160,7 +182,6 @@ def schedule(conn, tasks, cpus):
 
     time = 0
     while not_planned(range(len(tasks))):
-        ready = get_ready(time)
         ready_cpus = get_ready_cpus(time)
         able_to_plan = not_planned(get_ready_to_plan(time))
         if not able_to_plan:
@@ -172,7 +193,7 @@ def schedule(conn, tasks, cpus):
                 break
             weights = sorted([(d, conn[d, r]) for d in get_dependencies(r)],
                              key=lambda x: x[1], reverse=True)
-            preferred_cpus = [plan_task[i][1] for i, w in weights]
+            preferred_cpus = [plan_task[i][1][0] for i, w in weights]
             # sort weights
             print(r+1, get_dependencies(r), weights, preferred_cpus, ready_cpus)
             if preferred_cpus:
@@ -181,20 +202,22 @@ def schedule(conn, tasks, cpus):
                 cpu = ready_cpus.pop()
             pt = do_plan_copy_predict(time, weights, cpu)
 
+            if get_execution_frame(time, tasks[r], cpu) > time:
+                continue
+
             # predict CPU
-            predicted = []
+            predicted = [pt]
             for i in range(int(time), int(pt)+1):
                 _ready_cpus = get_ready_cpus(i)
-                _cpu = pop_priorities(_ready_cpus, preferred_cpus)
-                predicted.append(do_plan_copy_predict(i, weights, _cpu))
-            # copy
+                if _ready_cpus:
+                    _cpu = pop_priorities(_ready_cpus, preferred_cpus)
+                    predicted.append(do_plan_copy_predict(i, weights, _cpu))
+
             if min(predicted) < pt:
                 continue
 
-            #if pt - time
-            #do_plan_copy_predict(time, weights, _cpu)
             plan_copy, plan_task, _ = do_plan_copy(time, weights, cpu, fake=False)
         else:
             time += 1
-        #break
-    draw(plan_task, plan_copy, tasks, time+10, cpus)
+
+    draw(plan_task, plan_copy, tasks, time+15, cpus, cp)

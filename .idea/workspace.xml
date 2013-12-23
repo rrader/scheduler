@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5212d234-f1d5-4b9d-93a5-403a09d76a82" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/graph.py" afterPath="$PROJECT_DIR$/graph.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scheduler.py" afterPath="$PROJECT_DIR$/scheduler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test4" afterPath="$PROJECT_DIR$/test4" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui.py" afterPath="$PROJECT_DIR$/ui.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -28,19 +28,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ui.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ui.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="111" column="28" selection-start="3789" selection-end="3789" vertical-scroll-proportion="0.0" vertical-offset="1349" max-vertical-offset="3690">
+            <state line="85" column="42" selection-start="2668" selection-end="2668" vertical-scroll-proportion="0.33167082" vertical-offset="992" max-vertical-offset="3795">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scheduler.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="scheduler.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scheduler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="139" column="21" selection-start="4376" selection-end="4376" vertical-scroll-proportion="0.5511222" vertical-offset="1864" max-vertical-offset="3090">
+            <state line="154" column="19" selection-start="5074" selection-end="5074" vertical-scroll-proportion="0.0" vertical-offset="2159" max-vertical-offset="3435">
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -51,8 +51,10 @@
       <file leaf-file-name="graph.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/graph.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="31" selection-start="654" selection-end="654" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="765">
-              <folding />
+            <state line="34" column="16" selection-start="1155" selection-end="1155" vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="990">
+              <folding>
+                <element signature="e#0#40#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -80,8 +82,8 @@
       <list>
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/graph.py" />
-        <option value="$PROJECT_DIR$/ui.py" />
         <option value="$PROJECT_DIR$/scheduler.py" />
+        <option value="$PROJECT_DIR$/ui.py" />
       </list>
     </option>
   </component>
@@ -141,8 +143,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test.py" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/test.py" />
     <property name="FullScreen" value="false" />
   </component>
   <component name="PyConsoleOptionsProvider">
@@ -330,9 +332,9 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.49519232" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24597365" sideWeight="0.47596154" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24597365" sideWeight="0.2804487" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3974359" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24597365" sideWeight="0.2099359" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24597365" sideWeight="0.4054487" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31730768" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31410256" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3215434" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -358,17 +360,10 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="7" />
+      <option name="time" value="15" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="74" selection-end="74" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="165">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ui.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="66" column="54" selection-start="2096" selection-end="2096" vertical-scroll-proportion="0.0" vertical-offset="795" max-vertical-offset="3780">
@@ -388,7 +383,9 @@
     <entry file="file://$PROJECT_DIR$/graph.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="0" selection-start="1" selection-end="1" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="180">
-          <folding />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -447,26 +444,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/graph.py">
+    <entry file="file:///usr/lib/python3.3/site-packages/matplotlib/patches.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="31" selection-start="654" selection-end="654" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="765">
+        <state line="531" column="8" selection-start="16517" selection-end="16517" vertical-scroll-proportion="0.78054863" vertical-offset="7472" max-vertical-offset="64815">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ui.py">
+    <entry file="file://$PROJECT_DIR$/graph.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="28" selection-start="3789" selection-end="3789" vertical-scroll-proportion="0.0" vertical-offset="1349" max-vertical-offset="3690">
-          <folding />
+        <state line="34" column="16" selection-start="1155" selection-end="1155" vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="990">
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scheduler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="139" column="21" selection-start="4376" selection-end="4376" vertical-scroll-proportion="0.5511222" vertical-offset="1864" max-vertical-offset="3090">
+        <state line="154" column="19" selection-start="5074" selection-end="5074" vertical-scroll-proportion="0.0" vertical-offset="2159" max-vertical-offset="3435">
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="42" selection-start="2668" selection-end="2668" vertical-scroll-proportion="0.33167082" vertical-offset="992" max-vertical-offset="3795">
+          <folding />
         </state>
       </provider>
     </entry>

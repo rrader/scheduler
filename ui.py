@@ -1,4 +1,5 @@
 import json
+from math import sqrt
 from multiprocessing import Process
 from pprint import pprint
 from threading import Thread
@@ -107,7 +108,7 @@ class UI():
 
     def show(self):
         self.build()
-        self.load_file('test6')
+        self.load_file('test7')
         Process(target=self.start_schedule).start()
         self.root.mainloop()
 
@@ -228,7 +229,14 @@ class UI():
             o1, o2 = self.node_elements(s_n)[0], self.node_elements(e_n)[0]
             s = self.canvas.coords(o1)
             e = self.canvas.coords(o2)
-            self.canvas.coords(ltag + "l", (s[0]+s[2])/2, (s[1]+s[3])/2, (e[0]+e[2])/2, (e[1]+e[3])/2)
+            length = sqrt(((s[0]+s[2])/2 - (e[0]+e[2])/2)**2 + ((s[1]+s[3])/2 + (e[1]+e[3])/2)**2)
+            sx = (s[0] + s[2])/2, (s[1] + s[3])/2
+            ex = (e[0] + e[2])/2, (e[1] + e[3])/2
+            s2 = (sx[0] + 0.1*(ex[0] - sx[0]),
+                 sx[1] + 0.1*(ex[1] - sx[1]))
+            e2 = (sx[0] + 0.9*(ex[0] - sx[0]),
+                 sx[1] + 0.9*(ex[1] - sx[1]))
+            self.canvas.coords(ltag + "l", s2[0], s2[1], e2[0], e2[1])
             self.canvas.coords(ltag + "t", (s[0]+e[0])/2, (s[1]+e[3])/2)
 
     def configure_node(self, i):
