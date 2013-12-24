@@ -152,7 +152,7 @@ def schedule(conn, tasks, cpus):
             predicted_rerun = do_plan_copy_predict(time, weights_sub, cpu)
             predicted_rerun = get_execution_frame(predicted_rerun, tasks[d], cpu)
             # compare
-            if True or (not nodups and predicted_rerun + tasks[d] >= plan + w):
+            if False or (not nodups and predicted_rerun + tasks[d] >= plan + w):
                 _plan_copy[cpu-1].append((plan, plan + w, d+1, r+1))
                 _plan_copy[d_cpu-1].append((plan, plan + w, d+1, r+1))
                 time_added.append(plan + w)
